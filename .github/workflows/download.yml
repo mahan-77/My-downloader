@@ -1,1 +1,22 @@
-https://milfycity.app/wp-content/uploads/2026/02/MilfyCity.App%20[Final%20Edition]%20V2.0.apk
+name: Download APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      apk_url:
+        description: 'Link of APK file'
+        required: true
+        type: string
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK
+        run: |
+          curl -L -o app.apk "${{ github.event.inputs.apk_url }}"
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: downloaded-apk
+          path: app.apk
