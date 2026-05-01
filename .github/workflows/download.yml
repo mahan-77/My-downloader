@@ -12,9 +12,11 @@ jobs:
   download:
     runs-on: ubuntu-latest
     steps:
-      - name: Download APK
+      - name: Download APK with browser header
         run: |
-          curl -L -o app.apk "${{ github.event.inputs.apk_url }}"
+          curl -L -o app.apk \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            "${{ github.event.inputs.apk_url }}"
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
