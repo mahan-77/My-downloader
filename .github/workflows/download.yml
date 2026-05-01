@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       apk_url:
-        description: 'Link of APK file'
+        description: 'لینک مستقیم فایل APK'
         required: true
         type: string
 
@@ -12,7 +12,7 @@ jobs:
   download:
     runs-on: ubuntu-latest
     steps:
-      - name: Download APK with browser header
+      - name: Download APK
         run: |
           curl -L -o app.apk \
             -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
