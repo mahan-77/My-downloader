@@ -1,10 +1,10 @@
-name: Download APK
+name: Download APK Direct
 
 on:
   workflow_dispatch:
     inputs:
       apk_url:
-        description: 'لینک مستقیم فایل APK'
+        description: 'Direct APK file link'
         required: true
         type: string
 
@@ -12,13 +12,25 @@ jobs:
   download:
     runs-on: ubuntu-latest
     steps:
-      - name: Download APK
+      - name: Download APK with strong headers
         run: |
-          curl -L -o app.apk \
+          curl -L --fail --retry 5 --retry-all-errors \
             -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            -H "Accept: application/vnd.android.package-archive" \
+            -H "Connection: keep-alive" \
+            -o app.apk \
             "${{ github.event.inputs.apk_url }}"
+          
+          if [ ! -f app.apk ] || [ $(stat -c%s app.apk) -lt 1000000 ]; then
+            echo "Error: File not downloaded correctly!"
+            exit 1
+          fi
+          
+          echo "File size: $(stat -c%s app.apk) bytes"
+          
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: downloaded-apk
           path: app.apk
+          retention-days: 7
